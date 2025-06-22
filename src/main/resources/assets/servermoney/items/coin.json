@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "servermoney:item/coin.json"
+    "model": "servermoney:item/coin"
   }
 }

@@ -45,7 +45,7 @@ public class ServerMoney implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(new ShopCommand());
 
         PlayerBlockBreakEvents.BEFORE.register(new BreakShopEvent());
-        TimerCallbackSerializer.INSTANCE.registerSerializer(new ShopResendCallback.ShopResendSerializer());
+        TimerCallbackSerializer.INSTANCE.registerSerializer(Identifier.of(MOD_ID, "shop_resend"), ShopResendCallback.CODEC);
         InputAttachment.register();
 
         ServerLifecycleEvents.SERVER_STARTED.register(MoneyStorage::init);

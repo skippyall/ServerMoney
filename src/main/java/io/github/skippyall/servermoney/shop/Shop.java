@@ -2,11 +2,11 @@ package io.github.skippyall.servermoney.shop;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Uuids;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class Shop {
@@ -49,17 +49,20 @@ public class Shop {
 
     public NbtCompound encode(RegistryWrapper.WrapperLookup registryLookup) {
         NbtCompound shop = new NbtCompound();
-        shop.putUuid("owner", getShopOwner());
+        shop.put("owner", Uuids.CODEC, getShopOwner());
         shop.putDouble("price", getPrice());
-        shop.put("item", ItemVariant.CODEC.encode(getItem(), NbtOps.INSTANCE, null).getOrThrow());
+        shop.put("item", ItemVariant.CODEC, getItem());
         shop.putInt("count", getCount());
         return shop;
     }
 
-    public void decode(NbtCompound shop, RegistryWrapper.WrapperLookup registryLookup) {
-        setShopOwner(shop.getUuid("owner"));
-        setPrice(shop.getDouble("price"));
-        ItemVariant.CODEC.decode(NbtOps.INSTANCE, shop.get("item")).ifSuccess(pair -> setItem(pair.getFirst()));
-        setCount(shop.getInt("count"));
+    public void decode(Optional<NbtCompound> optional, RegistryWrapper.WrapperLookup registryLookup) {
+        if(optional.isPresent()) {
+            NbtCompound shop = optional.get();
+            setShopOwner(shop.get("owner", Uuids.CODEC).orElse(FakePlayer.DEFAULT_UUID));
+            setPrice(shop.getDouble("price").orElse(0.0));
+            setItem(shop.get("item", ItemVariant.CODEC).orElse(ItemVariant.blank()));
+            setCount(shop.getInt("count").orElse(0));
+        }
     }
 }

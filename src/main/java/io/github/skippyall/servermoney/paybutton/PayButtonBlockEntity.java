@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Uuids;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
@@ -37,13 +38,13 @@ public class PayButtonBlockEntity extends BlockEntity {
 
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
-        owner = nbt.getUuid("owner");
-        amount = nbt.getDouble("amount");
+        owner = nbt.get("owner", Uuids.CODEC).orElse(null);
+        amount = nbt.getDouble("amount").orElse(0.0);
     }
 
     @Override
     public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
-        nbt.putUuid("owner", owner);
+        nbt.put("owner", Uuids.CODEC, owner);
         nbt.putDouble("amount", amount);
     }
 }

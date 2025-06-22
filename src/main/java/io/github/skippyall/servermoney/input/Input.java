@@ -3,7 +3,6 @@ package io.github.skippyall.servermoney.input;
 import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import io.github.skippyall.servermoney.MoneyBlocks;
-import io.github.skippyall.servermoney.ServerMoney;
 import io.github.skippyall.servermoney.config.ServerMoneyConfig;
 import io.github.skippyall.servermoney.money.MoneyStorage;
 import io.github.skippyall.servermoney.paybutton.PayButtonBlockEntity;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.AnvilScreenHandler;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
@@ -71,7 +69,7 @@ public class Input {
     }
 
     public static void selectItem(PlayerEntity player, ShopBlockEntity shop) {
-        player.sendMessage(Text.translatable("servermoney.input.item").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/shop modify item"))), false);
+        player.sendMessage(Text.translatable("servermoney.input.item").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.SuggestCommand("/shop modify item"))), false);
         scheduleInput(InputType.ITEM, player).thenAccept(shop::setItem);
     }
 
@@ -101,7 +99,7 @@ public class Input {
         if(profile.isPresent()) {
             name = profile.get().getName();
         }
-        sender.sendMessage(Text.translatable("servermoney.input.paybutton.confirm", name, amount, ServerMoneyConfig.moneySymbol).setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/money confirm"))), false);
+        sender.sendMessage(Text.translatable("servermoney.input.paybutton.confirm", name, amount, ServerMoneyConfig.moneySymbol).setStyle(Style.EMPTY.withClickEvent(new ClickEvent.RunCommand("/money confirm"))), false);
         long start = System.currentTimeMillis();
         scheduleInput(InputType.CONFIRM_PAY, sender).thenAccept((v) -> {
             if (System.currentTimeMillis() < start + 10000 && world.getBlockEntity(pos) instanceof PayButtonBlockEntity pbbe) {

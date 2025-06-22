@@ -6,15 +6,9 @@
     "D"
   ],
   "key": {
-    "H": {
-      "id": "minecraft:hopper"
-    },
-    "C": {
-      "id":"minecraft:chest"
-    },
-    "D": {
-      "id":"minecraft:dropper"
-    }
+    "H": "minecraft:hopper",
+    "C": "minecraft:chest",
+    "D": "minecraft:dropper"
   },
   "result": {
     "id": "servermoney:shop_chest"
